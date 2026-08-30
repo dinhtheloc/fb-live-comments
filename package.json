@@ -1,0 +1,14 @@
+{
+  "name": "fb-live-comments",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "He thong live comments toi gian de hoc kien truc - zero dependency",
+  "scripts": {
+    "start": "node scripts/start-all.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
