@@ -19,7 +19,7 @@ import http from 'node:http';
 import { config, messagingNodes } from '../config.js';
 import { createRing } from '../lib/hashring.js';
 import { createLogger } from '../lib/log.js';
-import { readJson, sendJson, postJson, parseUrl } from '../lib/http.js';
+import { readJson, sendJson, postJson, parseUrl, listen } from '../lib/http.js';
 
 const log = createLogger('dispatcher');
 
@@ -58,7 +58,4 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(config.dispatcher, () => {
-  log.info(`sẵn sàng trên :${config.dispatcher}`);
-  log.info(`ring có ${messagingNodes.length} node: ${messagingNodes.join(', ')}`);
-});
+listen(server, config.dispatcher, log, `sẵn sàng trên :${config.dispatcher} — ring có ${messagingNodes.length} node`);

@@ -1,0 +1,9 @@
+{
+  "name": "fb-live-comments",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": { "label": "Load Balancer" }
+  },
+  "postCreateCommand": "node --version"
+}

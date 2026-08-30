@@ -16,7 +16,7 @@ import http from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { dbUrl, dispatcherUrl } from '../config.js';
 import { createLogger } from '../lib/log.js';
-import { readJson, sendJson, postJson, getJson, parseUrl } from '../lib/http.js';
+import { readJson, sendJson, postJson, getJson, parseUrl, listen } from '../lib/http.js';
 
 const port = Number(process.argv[2]);
 if (!port) throw new Error('cách dùng: node services/comment-service.js <port>');
@@ -43,10 +43,10 @@ async function createComment({ videoId, author, content }) {
   try {
     const result = await postJson(`${dispatcherUrl}/dispatch`, comment);
     log.info(`đã chuyển cho dispatcher -> ${result.deliveredTo}`);
-    return { comment, delivered: true };
+    return { comment, delivered: true, subscribers: result.subscribers };
   } catch (error) {
     log.error(`dispatcher lỗi (comment vẫn an toàn trong DB): ${error.message}`);
-    return { comment, delivered: false };
+    return { comment, delivered: false, subscribers: 0 };
   }
 }
 
@@ -59,12 +59,12 @@ const server = http.createServer(async (req, res) => {
       if (!body.videoId || !body.content) {
         return sendJson(res, 400, { error: 'cần có videoId và content' });
       }
-      const { comment, delivered } = await createComment({
+      const { comment, delivered, subscribers } = await createComment({
         videoId: body.videoId,
         author: body.author ?? 'ẩn danh',
         content: body.content,
       });
-      return sendJson(res, 201, { ...comment, delivered });
+      return sendJson(res, 201, { ...comment, delivered, subscribers });
     }
 
     // Đọc lịch sử comment. Đường này KHÔNG đi qua messaging service —
@@ -83,6 +83,4 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(port, () => {
-  log.info(`sẵn sàng trên :${port}`);
-});
+listen(server, port, log, `sẵn sàng trên :${port}`);

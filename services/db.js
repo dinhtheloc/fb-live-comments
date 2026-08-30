@@ -23,7 +23,7 @@
 import http from 'node:http';
 import { config } from '../config.js';
 import { createLogger } from '../lib/log.js';
-import { readJson, sendJson, parseUrl } from '../lib/http.js';
+import { readJson, sendJson, parseUrl, listen } from '../lib/http.js';
 
 const log = createLogger('db');
 
@@ -99,6 +99,4 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(config.db, () => {
-  log.info(`sẵn sàng trên :${config.db} với ${config.dbShards} shard`);
-});
+listen(server, config.db, log, `sẵn sàng trên :${config.db} với ${config.dbShards} shard`);

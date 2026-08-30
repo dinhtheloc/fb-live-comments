@@ -12,10 +12,11 @@ export const config = {
   commentServices: [4001, 4002],
 
   // Một instance, nhưng bên trong chia thành nhiều shard.
-  db: 7000,
+  // (7000 và 5000 bị macOS AirPlay chiếm, nên né sang 7001/5001.)
+  db: 7001,
   dbShards: 4,
 
-  dispatcher: 5000,
+  dispatcher: 5001,
 
   // Nhiều instance -> để thấy consistent hashing chọn đúng một cái.
   messagingServers: [6001, 6002, 6003],
